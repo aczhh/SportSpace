@@ -4,7 +4,7 @@
 
 SportSpace adalah aplikasi berbasis web yang digunakan untuk melihat informasi dan melakukan pemesanan lapangan olahraga, seperti futsal, badminton, dan basket.
 
-Aplikasi ini dibuat sebagai proyek kelompok mata kuliah Pemrograman Web dengan menerapkan arsitektur MVC menggunakan PHP Native dan database MySQL.
+Aplikasi ini dikembangkan sebagai proyek kelompok mata kuliah Pemrograman Web dengan menerapkan arsitektur MVC menggunakan PHP Native dan database MySQL.
 
 ## 1. Tujuan Proyek
 
@@ -20,15 +20,17 @@ Aplikasi ini dibuat sebagai proyek kelompok mata kuliah Pemrograman Web dengan m
 
 | Teknologi | Kegunaan |
 |---|---|
-| PHP Native | Backend aplikasi |
+| PHP Native | Mengatur proses backend aplikasi |
 | MySQL | Menyimpan data aplikasi |
 | PDO | Menghubungkan PHP dengan database |
-| HTML | Membuat struktur halaman |
-| CSS | Mengatur tampilan website |
-| JavaScript | Menambahkan interaksi halaman |
+| HTML | Membuat struktur halaman website |
+| CSS | Mengatur tampilan dan desain website |
+| JavaScript | Menambahkan interaksi pada halaman |
 | Git & GitHub | Mengelola kode dan kolaborasi kelompok |
 
-Proyek menggunakan PHP Native tanpa framework backend seperti Laravel. Tampilan website dibuat menggunakan HTML, CSS, dan JavaScript tanpa framework CSS tambahan.
+**Catatan:** PHP Native digunakan tanpa framework backend seperti Laravel. Tampilan website dibuat menggunakan HTML, CSS, dan JavaScript secara manual tanpa framework CSS tambahan seperti Bootstrap atau Tailwind.
+
+File tampilan menggunakan ekstensi `.php` karena HTML dapat digabungkan dengan kode PHP untuk menampilkan data secara dinamis.
 
 ## 3. Peran Pengguna
 
@@ -61,7 +63,7 @@ Fitur yang dapat digunakan:
 - Melihat seluruh data pemesanan.
 - Mengubah status pemesanan menjadi pending, confirmed, atau cancelled.
 
-Akun admin disediakan melalui data awal (seed) pada database. Admin tidak perlu melakukan registrasi melalui aplikasi.
+Akun admin disediakan melalui data awal pada database. Admin tidak perlu melakukan registrasi melalui aplikasi.
 
 ## 4. Fitur Utama Aplikasi
 
@@ -111,11 +113,10 @@ Akun admin disediakan melalui data awal (seed) pada database. Admin tidak perlu 
 5. Admin dapat melihat seluruh pemesanan customer.
 6. Admin dapat mengubah status pemesanan.
 
-## 5. Batasan Proyek
+## 5. Ruang Lingkup Proyek
 
-Agar proyek dapat diselesaikan sesuai waktu pengerjaan, pengembangan difokuskan pada fitur utama aplikasi.
+Pengembangan SportSpace difokuskan pada fitur utama berikut:
 
-**Fitur yang menjadi prioritas:**
 - Register, login, dan logout.
 - Pembatasan akses berdasarkan role customer dan admin.
 - Menampilkan daftar dan detail lapangan.
@@ -125,20 +126,7 @@ Agar proyek dapat diselesaikan sesuai waktu pengerjaan, pengembangan difokuskan 
 - Menampilkan seluruh data pemesanan pada halaman admin.
 - Mengubah status pemesanan.
 
-**Fitur tambahan jika waktu memungkinkan:**
-- Pengecekan bentrok jadwal pemesanan.
-- Fitur pembatalan pemesanan oleh customer.
-- Filter lapangan berdasarkan jenis olahraga.
-- Penyempurnaan tampilan website.
-
-**Fitur yang tidak termasuk dalam proyek:**
-- Pembayaran online atau payment gateway.
-- Verifikasi email.
-- Login menggunakan akun Google.
-- Fitur lupa password.
-- Notifikasi WhatsApp atau email otomatis.
-- Integrasi Google Maps.
-- Sistem membership.
+Fitur tambahan seperti pengecekan bentrok jadwal dan filter lapangan dapat dikerjakan jika waktu memungkinkan.
 
 ## 6. Rancangan Database
 
@@ -198,7 +186,7 @@ Total harga pemesanan dihitung menggunakan rumus:
 
 `total_price = price_per_hour × duration`
 
-Pengecekan bentrok jadwal dilakukan agar lapangan yang sama tidak dipesan pada waktu yang bertabrakan.
+Pengecekan bentrok jadwal dapat diterapkan agar lapangan yang sama tidak dipesan pada waktu yang bertabrakan.
 
 ## 7. Arsitektur MVC
 
@@ -215,7 +203,9 @@ Contoh:
 
 ### View
 
-Bertugas menampilkan halaman yang dilihat oleh customer dan admin. View menggunakan PHP dan HTML untuk menampilkan data.
+Bertugas menampilkan halaman yang dilihat oleh customer dan admin.
+
+View menggunakan HTML untuk struktur halaman, CSS untuk tampilan, serta PHP untuk menampilkan data secara dinamis.
 
 Contoh:
 - `home.php`
@@ -223,8 +213,6 @@ Contoh:
 - `booking.php`
 - `my-bookings.php`
 - `dashboard.php`
-
-View tidak digunakan untuk menjalankan query SQL secara langsung.
 
 ### Controller
 
@@ -250,9 +238,15 @@ sportspace/
 ├── public/
 │   ├── index.php
 │   ├── .htaccess
+│   │
 │   ├── css/
+│   │   └── style.css
+│   │
 │   ├── js/
+│   │   └── script.js
+│   │
 │   └── images/
+│       └── court.jpg
 │
 ├── src/
 │   ├── Core/
@@ -301,7 +295,30 @@ sportspace/
 └── README.md
 ```
 
-Struktur folder dapat disesuaikan selama pemisahan Model, View, dan Controller tetap diterapkan.
+### Keterangan Struktur Folder
+
+| Folder/File | Fungsi |
+|---|---|
+| `public/index.php` | Pintu masuk utama aplikasi (Front Controller). |
+| `public/css/` | Menyimpan file CSS untuk mengatur desain website. |
+| `public/js/` | Menyimpan file JavaScript untuk interaksi halaman. |
+| `public/images/` | Menyimpan gambar dan aset website. |
+| `src/Core/` | Menyimpan komponen utama aplikasi seperti Router. |
+| `src/Controllers/` | Menyimpan Controller untuk mengatur proses aplikasi. |
+| `src/Models/` | Menyimpan Model untuk mengelola data dan query database. |
+| `src/Config/` | Menyimpan konfigurasi koneksi database. |
+| `views/` | Menyimpan halaman website yang berisi HTML dan PHP. |
+| `views/layout/` | Menyimpan komponen tampilan yang digunakan bersama. |
+| `database/` | Menyimpan file SQL untuk membuat database. |
+
+**Catatan mengenai HTML, CSS, dan JavaScript:**
+
+- HTML ditulis di dalam file `.php` pada folder `views/`. File tersebut dapat berisi HTML dan kode PHP sekaligus.
+- CSS ditulis pada file `style.css` di folder `public/css/`.
+- JavaScript ditulis pada file `script.js` di folder `public/js/`.
+- Gambar website disimpan pada folder `public/images/`.
+
+Contohnya, jika ingin mengubah tulisan pada halaman Home, buka `views/customer/home.php`. Jika ingin mengubah warna atau desainnya, buka `public/css/style.css`.
 
 ## 9. Rancangan Route
 
@@ -421,15 +438,16 @@ Contoh nama branch:
 ### Alur Kerja Git
 
 1. Clone repository ke komputer masing-masing.
-2. Ambil perubahan terbaru dari branch utama.
+2. Ambil perubahan terbaru dari branch utama pengembangan.
 3. Buat atau pindah ke branch sesuai fitur yang dikerjakan.
 4. Kerjakan fitur pada branch masing-masing.
 5. Lakukan commit secara berkala dengan pesan yang jelas.
 6. Push branch ke GitHub.
-7. Buat Pull Request (PR) menuju branch `main`.
+7. Buat Pull Request (PR) menuju branch `develop`.
 8. Anggota lain melakukan review terhadap kode.
 9. Perbaiki kode jika terdapat masukan.
-10. Merge ke branch utama setelah disetujui.
+10. Merge ke branch `develop` setelah disetujui.
+11. Setelah fitur terintegrasi dan diuji, gabungkan `develop` ke `main`.
 
 ### Contoh Perintah Git
 
@@ -459,7 +477,8 @@ Setiap anggota wajib memiliki kontribusi commit dan melakukan review terhadap pe
 4. Buat database dengan nama `sportspace_db`.
 5. Import file `database/sportspace_db.sql` melalui phpMyAdmin.
 6. Sesuaikan konfigurasi database pada `src/Config/koneksi.php`.
-7. Buka aplikasi melalui browser menggunakan alamat lokal yang telah dikonfigurasi.
+7. Pastikan konfigurasi Apache dan routing sudah sesuai.
+8. Buka aplikasi melalui browser menggunakan alamat lokal yang telah dikonfigurasi.
 
 ### Akun Pengguna
 
