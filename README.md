@@ -1,238 +1,492 @@
 # SportSpace – Sports Facility Booking
 
-Aplikasi web sederhana untuk melihat dan memesan lapangan olahraga (futsal, badminton, basket, dll). Dibuat sebagai proyek kelompok mata kuliah Pemrograman Web.
+**Find Your Court, Book Your Game.**
 
-**Tagline:** Find Your Court, Book Your Game.
+SportSpace adalah aplikasi berbasis web yang digunakan untuk melihat informasi dan melakukan pemesanan lapangan olahraga, seperti futsal, badminton, dan basket.
 
-## 1. Tujuan
+Aplikasi ini dibuat sebagai proyek kelompok mata kuliah Pemrograman Web dengan menerapkan arsitektur MVC menggunakan PHP Native dan database MySQL.
 
-- Customer bisa melihat daftar lapangan dan memesannya secara online.
-- Admin bisa mengelola data lapangan dan status pemesanan.
-- Menerapkan arsitektur MVC dengan PHP Native (tanpa framework).
-- Menggunakan MySQL dengan PDO dan prepared statement.
-- Berkolaborasi menggunakan Git dan GitHub (branch, commit, Pull Request, review).
+## 1. Tujuan Proyek
 
-## 2. Teknologi
+- Memudahkan customer mencari informasi lapangan olahraga.
+- Memungkinkan customer melakukan pemesanan lapangan secara online.
+- Memudahkan customer melihat riwayat pemesanan.
+- Membantu admin mengelola data lapangan dan pemesanan.
+- Menerapkan arsitektur MVC menggunakan PHP Native.
+- Menggunakan MySQL dengan PDO dan prepared statements.
+- Menerapkan kolaborasi pengembangan menggunakan Git dan GitHub.
+
+## 2. Teknologi yang Digunakan
 
 | Teknologi | Kegunaan |
 |---|---|
-| PHP Native (MVC) | Backend |
-| MySQL + PDO | Database |
-| HTML, CSS, JavaScript | Tampilan |
-| Git & GitHub | Kolaborasi |
+| PHP Native | Backend aplikasi |
+| MySQL | Menyimpan data aplikasi |
+| PDO | Menghubungkan PHP dengan database |
+| HTML | Membuat struktur halaman |
+| CSS | Mengatur tampilan website |
+| JavaScript | Menambahkan interaksi halaman |
+| Git & GitHub | Mengelola kode dan kolaborasi kelompok |
+
+Proyek menggunakan PHP Native tanpa framework backend seperti Laravel. Tampilan website dibuat menggunakan HTML, CSS, dan JavaScript tanpa framework CSS tambahan.
 
 ## 3. Peran Pengguna
 
-**Customer**
-- Register dan login
-- Melihat daftar dan detail lapangan
-- Memesan lapangan (pilih tanggal, jam mulai, dan durasi)
-- Melihat riwayat pemesanan (My Booking)
+SportSpace memiliki dua jenis pengguna, yaitu Customer dan Admin.
 
-**Admin**
-- Login
-- CRUD data lapangan
-- Melihat semua pemesanan
-- Mengubah status pemesanan (pending / confirmed / cancelled)
+### A. Customer
 
-## 4. Prioritas Fitur
+Customer adalah pengguna yang ingin mencari dan memesan lapangan olahraga.
 
-Dikerjakan berurutan sesuai prioritas, karena waktu pengerjaan terbatas.
+Fitur yang dapat digunakan:
+- Membuat akun melalui halaman register.
+- Login dan logout.
+- Melihat halaman utama SportSpace.
+- Melihat daftar lapangan yang tersedia.
+- Melihat detail, fasilitas, dan harga lapangan.
+- Melakukan pemesanan dengan memilih tanggal, jam mulai, dan durasi.
+- Melihat riwayat pemesanan melalui halaman My Booking.
 
-**Prioritas 1 (wajib selesai)**
-- Daftar lapangan dan detail lapangan
-- CRUD lapangan oleh admin
-- Form booking dan simpan booking
-- Halaman My Booking
+### B. Admin
 
-**Prioritas 2**
-- Register, login, logout (password_hash + session)
-- Pembatasan akses admin dan customer
-- Admin mengubah status booking
+Admin adalah pengguna yang bertugas mengelola data aplikasi.
 
-**Prioritas 3 (jika sempat)**
-- Pengecekan jadwal bentrok
-- Mempercantik tampilan
-- Fitur batal booking oleh customer
+Fitur yang dapat digunakan:
+- Login dan logout.
+- Melihat dashboard admin.
+- Melihat ringkasan jumlah lapangan dan pemesanan.
+- Menambahkan data lapangan.
+- Mengubah data lapangan.
+- Menghapus data lapangan.
+- Melihat seluruh data pemesanan.
+- Mengubah status pemesanan menjadi pending, confirmed, atau cancelled.
 
-**Tidak dikerjakan:** pembayaran online, upload gambar (gambar cukup pakai URL/nama file), notifikasi, Google Maps, membership.
+Akun admin disediakan melalui data awal (seed) pada database. Admin tidak perlu melakukan registrasi melalui aplikasi.
 
-## 5. Rancangan Database
+## 4. Fitur Utama Aplikasi
 
-Nama database: `sportspace_db` (3 tabel).
+### A. Fitur Customer
 
-**users**
+| Fitur | Deskripsi |
+|---|---|
+| Register | Membuat akun customer baru. |
+| Login | Masuk menggunakan email dan password. |
+| Home | Menampilkan halaman utama SportSpace. |
+| Daftar Lapangan | Menampilkan daftar lapangan olahraga. |
+| Detail Lapangan | Menampilkan informasi, fasilitas, dan harga lapangan. |
+| Booking Lapangan | Memilih tanggal, jam mulai, dan durasi pemesanan. |
+| My Booking | Menampilkan riwayat pemesanan milik customer yang sedang login. |
+| Logout | Keluar dari akun customer. |
 
-| Field | Tipe | Keterangan |
+### B. Fitur Admin
+
+| Fitur | Deskripsi |
+|---|---|
+| Login Admin | Masuk menggunakan akun admin yang tersedia. |
+| Dashboard | Menampilkan ringkasan jumlah lapangan dan pemesanan. |
+| Kelola Lapangan | Menambah, melihat, mengubah, dan menghapus data lapangan. |
+| Kelola Booking | Melihat seluruh data pemesanan customer. |
+| Update Status | Mengubah status pemesanan menjadi pending, confirmed, atau cancelled. |
+| Logout | Keluar dari akun admin. |
+
+### Alur Penggunaan Customer
+
+1. Customer membuka website SportSpace.
+2. Customer melakukan register jika belum memiliki akun.
+3. Customer login menggunakan email dan password.
+4. Customer melihat daftar lapangan.
+5. Customer memilih lapangan yang diinginkan.
+6. Customer melihat detail dan harga lapangan.
+7. Customer memilih tanggal, jam mulai, dan durasi bermain.
+8. Customer mengirim formulir pemesanan.
+9. Sistem memvalidasi data dan menyimpan pemesanan ke database.
+10. Customer dapat melihat pemesanannya melalui halaman My Booking.
+
+### Alur Penggunaan Admin
+
+1. Admin membuka halaman login.
+2. Admin masuk menggunakan akun yang sudah disediakan.
+3. Admin diarahkan ke dashboard.
+4. Admin dapat mengelola data lapangan.
+5. Admin dapat melihat seluruh pemesanan customer.
+6. Admin dapat mengubah status pemesanan.
+
+## 5. Batasan Proyek
+
+Agar proyek dapat diselesaikan sesuai waktu pengerjaan, pengembangan difokuskan pada fitur utama aplikasi.
+
+**Fitur yang menjadi prioritas:**
+- Register, login, dan logout.
+- Pembatasan akses berdasarkan role customer dan admin.
+- Menampilkan daftar dan detail lapangan.
+- CRUD data lapangan oleh admin.
+- Formulir dan penyimpanan pemesanan.
+- Halaman My Booking.
+- Menampilkan seluruh data pemesanan pada halaman admin.
+- Mengubah status pemesanan.
+
+**Fitur tambahan jika waktu memungkinkan:**
+- Pengecekan bentrok jadwal pemesanan.
+- Fitur pembatalan pemesanan oleh customer.
+- Filter lapangan berdasarkan jenis olahraga.
+- Penyempurnaan tampilan website.
+
+**Fitur yang tidak termasuk dalam proyek:**
+- Pembayaran online atau payment gateway.
+- Verifikasi email.
+- Login menggunakan akun Google.
+- Fitur lupa password.
+- Notifikasi WhatsApp atau email otomatis.
+- Integrasi Google Maps.
+- Sistem membership.
+
+## 6. Rancangan Database
+
+Database yang digunakan bernama `sportspace_db` dan terdiri dari tiga tabel utama.
+
+### A. Tabel `users`
+
+Menyimpan informasi akun customer dan admin.
+
+| Field | Tipe Data | Keterangan |
 |---|---|---|
-| id | INT | Primary Key, auto increment |
-| name | VARCHAR(100) | Nama |
-| email | VARCHAR(100) | Email (unik) |
-| password | VARCHAR(255) | Password ter-hash |
-| role | ENUM('customer','admin') | Peran |
-| created_at | TIMESTAMP | Waktu dibuat |
+| id | INT | Primary Key, Auto Increment |
+| name | VARCHAR(100) | Nama pengguna |
+| email | VARCHAR(100) | Email pengguna, unik |
+| password | VARCHAR(255) | Password yang sudah di-hash |
+| role | ENUM('customer','admin') | Peran pengguna |
+| created_at | TIMESTAMP | Waktu pembuatan akun |
 
-**courts**
+### B. Tabel `courts`
 
-| Field | Tipe | Keterangan |
+Menyimpan informasi lapangan olahraga.
+
+| Field | Tipe Data | Keterangan |
 |---|---|---|
-| id | INT | Primary Key, auto increment |
+| id | INT | Primary Key, Auto Increment |
 | name | VARCHAR(100) | Nama lapangan |
 | sport_type | VARCHAR(50) | Jenis olahraga |
-| description | TEXT | Deskripsi |
-| facilities | TEXT | Fasilitas |
+| description | TEXT | Deskripsi lapangan |
+| facilities | TEXT | Fasilitas lapangan |
 | price_per_hour | DECIMAL(10,2) | Harga per jam |
-| image | VARCHAR(255) | URL/nama file gambar |
-| created_at | TIMESTAMP | Waktu dibuat |
+| image | VARCHAR(255) | URL atau nama file gambar |
+| created_at | TIMESTAMP | Waktu pembuatan data |
 
-**bookings**
+### C. Tabel `bookings`
 
-| Field | Tipe | Keterangan |
+Menyimpan informasi pemesanan lapangan oleh customer.
+
+| Field | Tipe Data | Keterangan |
 |---|---|---|
-| id | INT | Primary Key, auto increment |
-| user_id | INT | FK ke users.id |
-| court_id | INT | FK ke courts.id |
-| booking_date | DATE | Tanggal main |
+| id | INT | Primary Key, Auto Increment |
+| user_id | INT | Foreign Key ke users.id |
+| court_id | INT | Foreign Key ke courts.id |
+| booking_date | DATE | Tanggal bermain |
 | start_time | TIME | Jam mulai |
-| duration | INT | Durasi (jam) |
-| total_price | DECIMAL(10,2) | duration x price_per_hour |
-| status | ENUM('pending','confirmed','cancelled') | Default: pending |
-| created_at | TIMESTAMP | Waktu dibuat |
+| duration | INT | Durasi pemesanan dalam jam |
+| total_price | DECIMAL(10,2) | Total harga pemesanan |
+| status | ENUM('pending','confirmed','cancelled') | Status pemesanan |
+| created_at | TIMESTAMP | Waktu pemesanan |
 
-**Relasi:** satu user punya banyak booking, satu court punya banyak booking.
+### Relasi Database
 
-Akun admin dibuat langsung lewat data awal (seed) di database, jadi tidak perlu halaman khusus.
+- Satu user dapat memiliki banyak pemesanan.
+- Satu lapangan dapat memiliki banyak pemesanan.
+- Setiap pemesanan dimiliki oleh satu user dan satu lapangan.
 
-## 6. Arsitektur MVC
+Total harga pemesanan dihitung menggunakan rumus:
 
-- **Model**: berisi query database (PDO + prepared statement). Satu file per tabel.
-- **View**: tampilan PHP + HTML, tanpa SQL. Gunakan `htmlspecialchars` saat menampilkan data.
-- **Controller**: menerima request, validasi input, memanggil Model, lalu memilih View.
+`total_price = price_per_hour × duration`
 
-Alur request: Browser → `public/index.php` (front controller) → Router → Controller → Model → View.
+Pengecekan bentrok jadwal dilakukan agar lapangan yang sama tidak dipesan pada waktu yang bertabrakan.
 
-## 7. Struktur Folder
+## 7. Arsitektur MVC
+
+Aplikasi menggunakan konsep Model-View-Controller (MVC) untuk memisahkan pengolahan data, tampilan, dan alur aplikasi.
+
+### Model
+
+Bertugas mengelola data dan berkomunikasi dengan database menggunakan PDO dan prepared statements.
+
+Contoh:
+- `User.php`
+- `Court.php`
+- `Booking.php`
+
+### View
+
+Bertugas menampilkan halaman yang dilihat oleh customer dan admin. View menggunakan PHP dan HTML untuk menampilkan data.
+
+Contoh:
+- `home.php`
+- `courts.php`
+- `booking.php`
+- `my-bookings.php`
+- `dashboard.php`
+
+View tidak digunakan untuk menjalankan query SQL secara langsung.
+
+### Controller
+
+Bertugas menerima request dari pengguna, melakukan validasi input, memanggil Model, dan menentukan View yang akan ditampilkan.
+
+Contoh:
+- `AuthController.php`
+- `CourtController.php`
+- `BookingController.php`
+- `AdminController.php`
+
+### Alur Request
+
+Browser → `public/index.php` → Router → Controller → Model → Database
+
+Setelah data diproses, Controller mengirimkan data ke View untuk ditampilkan kepada pengguna.
+
+## 8. Struktur Folder
 
 ```text
 sportspace/
+│
 ├── public/
-│   ├── index.php          # front controller (satu pintu)
+│   ├── index.php
 │   ├── .htaccess
 │   ├── css/
 │   ├── js/
 │   └── images/
+│
 ├── src/
 │   ├── Core/
 │   │   └── Router.php
+│   │
 │   ├── Controllers/
 │   │   ├── AuthController.php
 │   │   ├── CourtController.php
 │   │   ├── BookingController.php
 │   │   └── AdminController.php
+│   │
 │   ├── Models/
 │   │   ├── User.php
 │   │   ├── Court.php
 │   │   └── Booking.php
-│   └── config/
+│   │
+│   └── Config/
 │       └── koneksi.php
+│
 ├── views/
-│   ├── layout/            # header, footer
-│   ├── auth/              # login, register
-│   ├── customer/          # home, courts, detail, booking, my-bookings
-│   └── admin/             # dashboard, courts, bookings
+│   ├── layout/
+│   │   ├── header.php
+│   │   └── footer.php
+│   │
+│   ├── auth/
+│   │   ├── login.php
+│   │   └── register.php
+│   │
+│   ├── customer/
+│   │   ├── home.php
+│   │   ├── courts.php
+│   │   ├── detail.php
+│   │   ├── booking.php
+│   │   └── my-bookings.php
+│   │
+│   └── admin/
+│       ├── dashboard.php
+│       ├── courts.php
+│       ├── court-form.php
+│       └── bookings.php
+│
 ├── database/
-│   └── sportspace_db.sql  # struktur tabel + data awal
+│   └── sportspace_db.sql
+│
 ├── .gitignore
 └── README.md
 ```
 
-## 8. Rancangan Route
+Struktur folder dapat disesuaikan selama pemisahan Model, View, dan Controller tetap diterapkan.
+
+## 9. Rancangan Route
+
+Route digunakan untuk menentukan halaman atau proses yang dijalankan berdasarkan request pengguna.
 
 | Method | Route | Fungsi |
 |---|---|---|
-| GET | `/` | Halaman utama |
-| GET | `/courts` | Daftar lapangan |
-| GET | `/courts/detail` | Detail lapangan (id lewat query `?id=1`) |
-| GET | `/booking` | Form booking |
-| GET | `/my-bookings` | Riwayat booking customer |
-| GET | `/login` | Halaman login |
-| GET | `/register` | Halaman register |
-| GET | `/admin` | Dashboard admin |
-| POST | `/login` | Proses login |
-| POST | `/register` | Proses registrasi |
-| POST | `/logout` | Logout |
-| POST | `/booking/store` | Simpan booking |
-| POST | `/admin/courts/store` | Tambah lapangan |
-| POST | `/admin/courts/update` | Ubah lapangan |
-| POST | `/admin/courts/delete` | Hapus lapangan |
-| POST | `/admin/bookings/update-status` | Ubah status booking |
+| GET | `/` | Menampilkan halaman utama |
+| GET | `/courts` | Menampilkan daftar lapangan |
+| GET | `/courts/detail?id=1` | Menampilkan detail lapangan |
+| GET | `/register` | Menampilkan halaman register |
+| GET | `/login` | Menampilkan halaman login |
+| GET | `/booking?court_id=1` | Menampilkan formulir pemesanan |
+| GET | `/my-bookings` | Menampilkan riwayat pemesanan customer |
+| GET | `/admin` | Menampilkan dashboard admin |
+| GET | `/admin/courts` | Menampilkan data lapangan |
+| GET | `/admin/bookings` | Menampilkan data pemesanan |
+| POST | `/register` | Memproses registrasi customer |
+| POST | `/login` | Memproses login |
+| POST | `/logout` | Memproses logout |
+| POST | `/booking/store` | Menyimpan pemesanan |
+| POST | `/admin/courts/store` | Menambahkan data lapangan |
+| POST | `/admin/courts/update` | Mengubah data lapangan |
+| POST | `/admin/courts/delete` | Menghapus data lapangan |
+| POST | `/admin/bookings/update-status` | Mengubah status pemesanan |
 
-Semua input divalidasi di Controller sebelum diproses. Setelah POST berhasil, gunakan redirect (pola PRG: `header('Location: ...')` lalu `exit`).
+Semua input dari pengguna harus divalidasi di Controller sebelum diproses lebih lanjut.
 
-## 9. Pembagian Tugas
+Setelah request POST berhasil diproses, aplikasi menggunakan redirect agar data tidak terkirim ulang ketika halaman di-refresh.
 
-**Anggota 1 – Auth**
-- Register, login, logout, password hashing, session, pembatasan akses role
-- File: `AuthController.php`, `User.php`, `views/auth/`
+## 10. Pembagian Tugas Kelompok
 
-**Anggota 2 – Court**
-- Home, daftar lapangan, detail lapangan, CRUD lapangan (admin), validasi input
-- File: `CourtController.php`, `Court.php`, view lapangan di `customer/` dan `admin/`
+Proyek dikerjakan oleh tiga anggota dengan pembagian berdasarkan modul utama aplikasi.
 
-**Anggota 3 – Booking**
-- Form booking, simpan booking, hitung total harga, My Booking, ubah status oleh admin, cek bentrok jadwal (prioritas 3)
-- File: `BookingController.php`, `Booking.php`, view booking di `customer/` dan `admin/`
+### Anggota 1 – Authentication & User Management
 
-**Dikerjakan bersama**
-- Setup repo, struktur folder, `Router.php`, `koneksi.php`, dan file SQL di hari pertama
-- Desain tampilan dasar (header, footer, CSS)
-- Integrasi, testing, dan perbaikan bug
-- Persiapan demo
+**Tanggung jawab: pengelolaan akun dan hak akses pengguna.**
 
-## 10. Aturan Git & GitHub
+Fitur yang dikerjakan:
+- Halaman register dan login.
+- Proses registrasi customer.
+- Proses login dan logout.
+- Password hashing menggunakan `password_hash()`.
+- Verifikasi password menggunakan `password_verify()`.
+- Pengelolaan session.
+- Pembatasan akses berdasarkan role customer dan admin.
+- Menampilkan halaman My Booking berdasarkan akun customer yang sedang login.
 
-Satu repository bersama. Setiap anggota bekerja di branch sendiri:
-- `feature/auth`
-- `feature/court`
-- `feature/booking`
+File utama:
+- `AuthController.php`
+- `User.php`
+- View pada folder `auth/`
+- Bagian My Booking pada folder `customer/`
 
-Alur kerja:
-1. Clone repository dan `git pull` dari branch `main`.
-2. Pindah ke branch fitur masing-masing.
-3. Kerjakan fitur, lalu commit sering dengan pesan yang jelas.
-4. Push branch ke GitHub.
-5. Buat Pull Request ke `main`.
-6. Minimal 1 anggota lain me-review dan memberi komentar.
-7. Merge setelah disetujui.
+### Anggota 2 – Court Management
 
-Contoh commit:
+**Tanggung jawab: pengelolaan informasi lapangan olahraga.**
+
+Fitur yang dikerjakan:
+- Halaman utama.
+- Halaman daftar lapangan.
+- Halaman detail lapangan.
+- Menambahkan data lapangan.
+- Mengubah data lapangan.
+- Menghapus data lapangan.
+- Menampilkan informasi harga dan fasilitas.
+- Validasi input data lapangan.
+
+File utama:
+- `CourtController.php`
+- `Court.php`
+- View pada folder `customer/` dan bagian pengelolaan lapangan di `admin/`.
+
+### Anggota 3 – Booking Management
+
+**Tanggung jawab: proses dan pengelolaan pemesanan.**
+
+Fitur yang dikerjakan:
+- Formulir pemesanan.
+- Memproses dan menyimpan data booking.
+- Validasi data pemesanan.
+- Menghitung total harga.
+- Menampilkan seluruh data booking pada halaman admin.
+- Mengubah status pemesanan oleh admin.
+- Pengecekan bentrok jadwal jika waktu memungkinkan.
+
+File utama:
+- `BookingController.php`
+- `Booking.php`
+- View booking pada folder `customer/` dan `admin/`.
+
+### Pekerjaan Bersama
+
+Beberapa pekerjaan dilakukan bersama oleh seluruh anggota:
+- Menentukan desain dan tampilan website.
+- Menyiapkan database dan relasinya.
+- Membuat struktur awal proyek MVC.
+- Menyiapkan Router dan koneksi database.
+- Mengintegrasikan seluruh fitur.
+- Melakukan testing dan memperbaiki bug.
+- Melakukan review Pull Request.
+- Menyiapkan dokumentasi dan demo aplikasi.
+
+Setiap anggota tetap perlu memahami alur aplikasi secara keseluruhan, bukan hanya bagian yang dikerjakan sendiri.
+
+## 11. Aturan Kolaborasi Git & GitHub
+
+Proyek menggunakan satu repository GitHub yang dikerjakan bersama.
+
+Setiap anggota mengerjakan fitur melalui branch masing-masing.
+
+Contoh nama branch:
+- `feature/auth-user`
+- `feature/court-management`
+- `feature/booking-management`
+
+### Alur Kerja Git
+
+1. Clone repository ke komputer masing-masing.
+2. Ambil perubahan terbaru dari branch utama.
+3. Buat atau pindah ke branch sesuai fitur yang dikerjakan.
+4. Kerjakan fitur pada branch masing-masing.
+5. Lakukan commit secara berkala dengan pesan yang jelas.
+6. Push branch ke GitHub.
+7. Buat Pull Request (PR) menuju branch `main`.
+8. Anggota lain melakukan review terhadap kode.
+9. Perbaiki kode jika terdapat masukan.
+10. Merge ke branch utama setelah disetujui.
+
+### Contoh Perintah Git
+
 ```bash
 git add .
 git commit -m "feat: add court listing page"
-git push origin feature/court
+git push origin feature/court-management
 ```
 
-Contoh pesan commit: `feat: add user login`, `fix: booking total price`, `style: improve navbar`, `docs: update readme`.
+### Contoh Pesan Commit
 
-## 11. Cara Menjalankan
+- `feat: add customer registration`
+- `feat: add admin login`
+- `feat: add court listing page`
+- `feat: implement booking form`
+- `fix: validate booking input`
+- `style: improve home page`
+- `docs: update readme`
 
-1. Clone repository ini.
-2. Buat database `sportspace_db`, lalu import `database/sportspace_db.sql`.
-3. Sesuaikan username dan password MySQL di `src/config/koneksi.php`.
-4. Jalankan lewat XAMPP (taruh folder di `htdocs`), atau gunakan PHP built-in server:
-   `php -S localhost:8000 -t public`
-5. Buka `http://localhost:8000` di browser.
+Setiap anggota wajib memiliki kontribusi commit dan melakukan review terhadap pekerjaan anggota lain.
 
-**Akun admin awal:** (isi sesuai data seed, contoh: admin@sportspace.com / admin123)
+## 12. Cara Menjalankan Aplikasi
 
-## 12. Checklist Ketentuan Tugas
+1. Clone repository SportSpace.
+2. Simpan folder proyek di dalam folder `htdocs` jika menggunakan XAMPP.
+3. Jalankan Apache dan MySQL melalui XAMPP.
+4. Buat database dengan nama `sportspace_db`.
+5. Import file `database/sportspace_db.sql` melalui phpMyAdmin.
+6. Sesuaikan konfigurasi database pada `src/Config/koneksi.php`.
+7. Buka aplikasi melalui browser menggunakan alamat lokal yang telah dikonfigurasi.
 
-- [x] Kelompok 3 orang, 1 repository GitHub
-- [x] PHP MVC + MySQL (PDO, prepared statement)
-- [x] Minimal 2 tabel (kami pakai 3)
-- [x] CRUD lengkap (data lapangan)
-- [x] Minimal 2 route GET dan 2 route POST
-- [x] Validasi input di Controller
-- [x] Branch per fitur, Pull Request, dan review rekan
+### Akun Pengguna
 
-**Deadline: 8 November 2026, pukul 23.59 WIB**
+**Admin:**
+
+Akun admin disediakan melalui data awal pada database. Informasi email dan password demo akan dicantumkan setelah data seed dibuat.
+
+**Customer:**
+
+Customer dapat membuat akun melalui halaman Register.
+
+## 13. Checklist Ketentuan Tugas
+
+Target implementasi proyek berdasarkan ketentuan tugas:
+
+- [ ] Dikerjakan oleh kelompok beranggotakan tiga orang dengan satu repository GitHub.
+- [ ] Menggunakan PHP dengan arsitektur MVC.
+- [ ] Menggunakan database MySQL, PDO, dan prepared statements.
+- [ ] Memiliki minimal dua tabel database.
+- [ ] Menerapkan fitur CRUD.
+- [ ] Memiliki minimal dua GET route dan dua POST route.
+- [ ] Melakukan validasi input di Controller.
+- [ ] Menggunakan branch untuk setiap fitur.
+- [ ] Menggunakan Pull Request dan melakukan peer review.
+
+**Deadline pengumpulan: 8 November 2026, pukul 23.59 WIB.**
+
+---
+
+**SportSpace – Find Your Court, Book Your Game.**
