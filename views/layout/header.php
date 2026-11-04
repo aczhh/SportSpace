@@ -32,46 +32,47 @@ $navLinks[] = ['/#keunggulan', 'Keunggulan'];
       }
     }
   </script>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
   <link rel="stylesheet" href="/css/style.css">
 </head>
-<body class="bg-ink font-sans text-snow antialiased">
+<body class="bg-snow text-ink antialiased">
 
-<header class="sticky top-0 z-30 px-4 pt-4">
-  <div class="mx-auto max-w-6xl">
-    <div class="flex h-16 items-center justify-between rounded-full border border-white/10 bg-ink/80 px-4 shadow-lg backdrop-blur">
+<header class="pointer-events-none fixed left-0 right-0 top-5 z-50 px-4">
+  <div class="pointer-events-auto mx-auto max-w-6xl">
+    <div class="flex h-16 items-center justify-between rounded-full border border-white/15 bg-ink/70 px-4 shadow-2xl backdrop-blur-md sm:px-6">
 
-      <a href="/" class="flex items-center gap-2 text-lg font-bold">
-        <span class="grid h-9 w-9 place-items-center rounded-full bg-brand text-ink">
-          <svg viewBox="0 0 24 24" class="h-5 w-5" fill="currentColor"><path d="M13 2 4 14h6l-1 8 9-12h-6z"/></svg>
+      <a href="/" class="group flex items-center gap-2">
+        <span class="flex h-9 w-9 items-center justify-center rounded-full bg-brand text-ink shadow-md transition group-hover:scale-105">
+          <span class="material-symbols-outlined text-[20px]">bolt</span>
         </span>
-        Sport<span class="text-brand">Space</span>
+        <span class="text-xl font-extrabold uppercase tracking-tight text-brand">SportSpace</span>
       </a>
 
-      <nav class="hidden items-center gap-1 text-sm font-medium md:flex">
+      <nav class="hidden items-center gap-1 text-sm font-bold lg:flex">
         <?php foreach ($navLinks as [$href, $label]): ?>
           <a href="<?= $href ?>"
-             class="rounded-full px-4 py-2 transition hover:bg-white/10 <?= $current === $href ? 'bg-white/10' : '' ?>">
+             class="rounded-full px-4 py-1.5 text-white/90 transition hover:text-brand <?= $current === $href ? 'bg-white/15 text-white' : '' ?>">
             <?= $label ?>
           </a>
         <?php endforeach; ?>
       </nav>
 
-      <div class="hidden items-center gap-2 md:flex">
+      <div class="flex items-center gap-3">
         <?php if ($loggedIn): ?>
-          <form action="/logout" method="POST">
-            <button type="submit" class="rounded-full bg-brand px-5 py-2 text-sm font-bold text-ink transition hover:bg-brand-hover">Logout</button>
+          <form action="/logout" method="POST" class="hidden sm:block">
+            <button type="submit" class="rounded-full bg-brand px-5 py-2 text-[13px] font-bold text-ink shadow-md transition hover:bg-brand-hover">Logout</button>
           </form>
         <?php else: ?>
-          <a href="/login" class="rounded-full bg-brand px-5 py-2 text-sm font-bold text-ink transition hover:bg-brand-hover">Masuk / Daftar</a>
+          <a href="/login" class="hidden rounded-full bg-brand px-5 py-2 text-[13px] font-bold text-ink shadow-md transition hover:bg-brand-hover sm:inline-flex">Masuk / Daftar</a>
         <?php endif; ?>
-      </div>
 
-      <button id="menu-btn" type="button" aria-expanded="false" aria-controls="mobile-menu"
-              class="rounded-full border border-white/20 px-4 py-2 text-sm font-semibold md:hidden">Menu</button>
+        <button id="menu-btn" type="button" aria-expanded="false" aria-controls="mobile-menu"
+                class="rounded-full border border-white/20 px-4 py-2 text-sm font-semibold text-white lg:hidden">Menu</button>
+      </div>
     </div>
 
     <!-- Menu mobile -->
-    <div id="mobile-menu" class="mt-2 hidden rounded-2xl border border-white/10 bg-ink p-3 md:hidden">
+    <div id="mobile-menu" class="mt-2 hidden rounded-2xl border border-white/10 bg-ink p-3 text-white lg:hidden">
       <?php foreach ($navLinks as [$href, $label]): ?>
         <a href="<?= $href ?>" class="block rounded-xl px-4 py-3 font-medium hover:bg-white/10"><?= $label ?></a>
       <?php endforeach; ?>
