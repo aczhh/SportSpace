@@ -1,4 +1,11 @@
 @import "tailwindcss";
 body {
     font-family: Arial, sans-serif;
+
+:root {
+  --lime: #BFFF1A;
+  --lime-hover: #7CFF00;
+  --gray: #3D3F44;
+  --black: #121418;
+  --white: #EDEFF2;
 }
