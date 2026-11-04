@@ -17,6 +17,13 @@ $navLinks[] = ['/#keunggulan', 'Keunggulan'];
 
   <title>SportSpace – Find Your Court, Book Your Game</title>
 
+  <!-- Load font icon Material Symbols dari Google Fonts -->
+  <!-- Tanpa ini, nama icon seperti "arrow_forward" akan muncul sebagai teks -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {

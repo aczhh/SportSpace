@@ -1,0 +1,7 @@
+# Arahkan semua request ke folder public/
+# Letakkan file ini di root folder proyek (sejajar dengan src/, views/, dll)
+# agar Apache tahu bahwa pintu masuk aplikasi ada di public/index.php
+
+RewriteEngine On
+RewriteRule ^(.*)$ public/$1 [L]
+
