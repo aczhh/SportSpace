@@ -2,6 +2,7 @@
 
 // =============================================
 // MODEL COURT (LAPANGAN)
+// Tanggung jawab: Anggota 2 (diperluas)
 // Mengelola semua query ke tabel courts
 // =============================================
 
@@ -49,8 +50,36 @@ class Court
     }
 
     // -----------------------------------------
-    // Ambil semua lapangan (untuk admin & daftar)
-    // TODO: Anggota 2 bisa tambah filter olahraga & nama
+    // Ambil semua lapangan dengan filter opsional
+    // $filterSport : '' = semua, 'Futsal' = hanya futsal
+    // $filterNama  : '' = semua, 'arena' = pencarian nama
+    // -----------------------------------------
+    public function ambilDenganFilter(string $filterSport = '', string $filterNama = ''): array
+    {
+        $kondisi = [];
+        $params  = [];
+
+        if ($filterSport !== '') {
+            $kondisi[] = 'sport_type = :sport';
+            $params[':sport'] = $filterSport;
+        }
+
+        if ($filterNama !== '') {
+            $kondisi[] = 'name LIKE :nama';
+            $params[':nama'] = '%' . $filterNama . '%';
+        }
+
+        $klausa = $kondisi ? 'WHERE ' . implode(' AND ', $kondisi) : '';
+
+        $sql  = "SELECT * FROM courts {$klausa} ORDER BY created_at DESC";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute($params);
+
+        return $stmt->fetchAll();
+    }
+
+    // -----------------------------------------
+    // Ambil semua lapangan tanpa filter (untuk admin)
     // -----------------------------------------
     public function ambilSemua(): array
     {
@@ -65,28 +94,54 @@ class Court
         return (int) $this->pdo->query("SELECT COUNT(*) FROM courts")->fetchColumn();
     }
 
-    // TODO: Anggota 2 – tambah lapangan baru
+    // -----------------------------------------
+    // Tambah lapangan baru
+    // $data harus berisi: name, sport_type, description,
+    //                     facilities, price_per_hour, image
+    // -----------------------------------------
     public function buat(array $data): bool
     {
         $sql = "INSERT INTO courts (name, sport_type, description, facilities, price_per_hour, image)
                 VALUES (:name, :sport_type, :description, :facilities, :price_per_hour, :image)";
+
         $stmt = $this->pdo->prepare($sql);
-        return $stmt->execute($data);
+
+        return $stmt->execute([
+            ':name'          => $data['name'],
+            ':sport_type'    => $data['sport_type'],
+            ':description'   => $data['description'],
+            ':facilities'    => $data['facilities'],
+            ':price_per_hour'=> $data['price_per_hour'],
+            ':image'         => $data['image'],
+        ]);
     }
 
-    // TODO: Anggota 2 – update data lapangan
+    // -----------------------------------------
+    // Update data lapangan berdasarkan ID
+    // -----------------------------------------
     public function update(int $id, array $data): bool
     {
         $sql = "UPDATE courts
                 SET name = :name, sport_type = :sport_type, description = :description,
                     facilities = :facilities, price_per_hour = :price_per_hour, image = :image
                 WHERE id = :id";
+
         $stmt = $this->pdo->prepare($sql);
-        $data[':id'] = $id;
-        return $stmt->execute($data);
+
+        return $stmt->execute([
+            ':name'          => $data['name'],
+            ':sport_type'    => $data['sport_type'],
+            ':description'   => $data['description'],
+            ':facilities'    => $data['facilities'],
+            ':price_per_hour'=> $data['price_per_hour'],
+            ':image'         => $data['image'],
+            ':id'            => $id,
+        ]);
     }
 
-    // TODO: Anggota 2 – hapus lapangan
+    // -----------------------------------------
+    // Hapus lapangan berdasarkan ID
+    // -----------------------------------------
     public function hapus(int $id): bool
     {
         $stmt = $this->pdo->prepare("DELETE FROM courts WHERE id = :id");

@@ -18,7 +18,7 @@ require __DIR__ . '/../layout/header.php';
 
     <!-- Latar belakang: foto + overlay gelap -->
     <div class="absolute inset-0">
-      <img src="/images/bg.jpeg" alt="Lapangan olahraga" class="h-full w-full object-cover object-center">
+      <img src="/images/bg.jpg" alt="Lapangan olahraga" class="h-full w-full object-cover object-center">
       <div class="absolute inset-0 bg-gradient-to-b from-ink/90 via-ink/70 to-ink/95"></div>
       <!-- Efek cahaya hijau di tengah atas -->
       <div class="pointer-events-none absolute -top-40 left-1/2 h-[500px] w-[700px] -translate-x-1/2 rounded-full bg-brand/15 blur-3xl"></div>
