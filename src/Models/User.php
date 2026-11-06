@@ -1,45 +1,72 @@
 <?php
 
-namespace App\Models;
-use PDO;
+// =============================================
+// MODEL USER
+// Tanggung jawab: Anggota 1
+// Mengelola semua query ke tabel users
+// =============================================
+
 class User
 {
-    private $pdo;
+    private PDO $pdo;
+
     // Menerima koneksi database dari Controller
     public function __construct(PDO $pdo)
-    { $this->pdo = $pdo; }
+    {
+        $this->pdo = $pdo;
+    }
 
+    // -----------------------------------------
     // Membuat akun customer baru
-    public function create($name, $email, $password)
-    {   $sql = "INSERT INTO users (name, email, password, role)
+    // Role selalu 'customer' — admin dibuat via seed database
+    // -----------------------------------------
+    public function create(string $name, string $email, string $password): bool
+    {
+        $sql = "INSERT INTO users (name, email, password, role)
                 VALUES (:name, :email, :password, 'customer')";
+
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
             ':name'     => $name,
             ':email'    => $email,
-            ':password' => $password
+            ':password' => $password,
         ]);
     }
 
+    // -----------------------------------------
     // Mencari pengguna berdasarkan email
-    public function findByEmail($email)
-    {   $sql = "SELECT * FROM users WHERE email = :email LIMIT 1";
+    // Digunakan saat login dan cek duplikat email
+    // -----------------------------------------
+    public function findByEmail(string $email): array|false
+    {
+        $sql  = "SELECT * FROM users WHERE email = :email LIMIT 1";
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([
-            ':email' => $email ]);
-           return $stmt->fetch();
+        $stmt->execute([':email' => $email]);
+        return $stmt->fetch();
     }
 
+    // -----------------------------------------
     // Mencari pengguna berdasarkan ID
-    public function findById($id)
-    {   $sql = "SELECT id, name, email, role, created_at
+    // Tidak menyertakan kolom password
+    // -----------------------------------------
+    public function findById(int $id): array|false
+    {
+        $sql = "SELECT id, name, email, role, created_at
                 FROM users
                 WHERE id = :id
                 LIMIT 1";
-                
+
         $stmt = $this->pdo->prepare($sql);
-        $stmt->execute([
-            ':id' => $id ]);
+        $stmt->execute([':id' => $id]);
         return $stmt->fetch();
+    }
+
+    // -----------------------------------------
+    // Update nama pengguna berdasarkan ID
+    // -----------------------------------------
+    public function updateName(int $id, string $name): bool
+    {
+        $stmt = $this->pdo->prepare("UPDATE users SET name = :name WHERE id = :id");
+        return $stmt->execute([':name' => $name, ':id' => $id]);
     }
 }

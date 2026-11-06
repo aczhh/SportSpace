@@ -15,7 +15,7 @@ $fasilitas = array_filter(array_map('trim', explode(',', (string)($lapangan['fac
 require __DIR__ . '/../layout/header.php';
 ?>
 
-<main class="min-h-screen bg-snow pt-28 pb-16">
+<main class="flex-1 bg-snow pt-28 pb-16">
   <div class="mx-auto max-w-5xl px-4 sm:px-6">
 
     <!-- Tombol kembali -->
@@ -92,25 +92,40 @@ require __DIR__ . '/../layout/header.php';
             </div>
 
             <!-- Tombol Pesan -->
-            <?php if (isset($_SESSION['user_id']) && $_SESSION['role'] === 'customer'): ?>
+            <?php
+              $isLoggedIn = isset($_SESSION['user']);
+              $userRole   = $_SESSION['user']['role'] ?? null;
+            ?>
+            <?php if ($isLoggedIn && $userRole === 'customer'): ?>
+              <!-- Sudah login sebagai customer → langsung ke halaman booking -->
               <a href="/booking?court_id=<?= (int)$lapangan['id'] ?>"
                  class="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-brand py-4 text-base font-bold text-ink shadow-md transition hover:scale-[1.01] hover:bg-brand-hover">
                 <span class="material-symbols-outlined text-[22px]">receipt_long</span>
                 Pesan Lapangan Ini
               </a>
-            <?php elseif (isset($_SESSION['user_id']) && $_SESSION['role'] === 'admin'): ?>
-              <div class="mt-5 rounded-xl border border-black/10 bg-snow px-4 py-3 text-center text-sm text-steel">
-                Login sebagai admin — tidak bisa booking.
-              </div>
-            <?php else: ?>
-              <a href="/login"
-                 class="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-brand py-4 text-base font-bold text-ink shadow-md transition hover:scale-[1.01] hover:bg-brand-hover">
-                <span class="material-symbols-outlined text-[22px]">login</span>
-                Login untuk Memesan
+            <?php elseif ($isLoggedIn && $userRole === 'admin'): ?>
+              <!-- Admin → tombol Edit Lapangan -->
+              <a href="/admin/courts"
+                 class="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-ink py-4 text-base font-bold text-brand shadow-md transition hover:scale-[1.01] hover:bg-brand hover:text-ink">
+                <span class="material-symbols-outlined text-[20px]">edit</span>
+                Edit Lapangan Ini
               </a>
               <p class="mt-2 text-center text-xs text-steel">
-                Belum punya akun?
-                <a href="/register" class="font-bold text-ink hover:underline">Daftar gratis</a>
+                Kamu masuk sebagai <span class="font-bold text-ink">Admin</span>
+              </p>
+            <?php else: ?>
+              <!-- Belum login → tombol tetap "Pesan", tapi redirect ke login -->
+              <a href="/login"
+                 class="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-brand py-4 text-base font-bold text-ink shadow-md transition hover:scale-[1.01] hover:bg-brand-hover">
+                <span class="material-symbols-outlined text-[22px]">receipt_long</span>
+                Pesan Lapangan Ini
+              </a>
+              <p class="mt-2 text-center text-xs text-steel">
+                Kamu perlu
+                <a href="/login" class="font-bold text-ink hover:underline">login</a>
+                atau
+                <a href="/register" class="font-bold text-ink hover:underline">daftar gratis</a>
+                untuk memesan.
               </p>
             <?php endif; ?>
           </div>

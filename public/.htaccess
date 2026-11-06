@@ -1,13 +1,8 @@
 Options -MultiViews
 RewriteEngine On
 
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
-# Redirect semua request ke public/index.php
-# Agar routing aplikasi bisa berjalan
-
-RewriteEngine On
+# Jika request bukan file/folder yang ada,
+# teruskan ke index.php agar router bisa menanganinya
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^ index.php [L]

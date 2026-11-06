@@ -48,7 +48,7 @@ class BookingController
     {
         $this->wajibLogin();
 
-        $user_id   = (int)   $_SESSION['user_id'];
+        $user_id   = (int)   $_SESSION['user']['id'];
         $court_id  = (int)  ($_POST['court_id']    ?? 0);
         $tanggal   = trim($_POST['booking_date']   ?? '');
         $jam_mulai = trim($_POST['start_time']     ?? '');
@@ -104,7 +104,7 @@ class BookingController
 
             $bookingBaru = [
                 'id'            => count($_SESSION['dummy_bookings']) + 1,
-                'nama_customer' => $_SESSION['name'] ?? 'Tester',
+                'nama_customer' => $_SESSION['user']['name'] ?? 'Tester',
                 'nama_lapangan' => $lapangan['name'],
                 'jenis_olahraga'=> $lapangan['sport_type'],
                 'booking_date'  => $tanggal,
@@ -133,7 +133,7 @@ class BookingController
         $this->wajibLogin();
 
         if ($this->modelBooking) {
-            $daftarBooking = $this->modelBooking->ambilMilikCustomer((int)$_SESSION['user_id']);
+            $daftarBooking = $this->modelBooking->ambilMilikCustomer((int)$_SESSION['user']['id']);
         } else {
             $daftarBooking = $_SESSION['dummy_bookings'] ?? [];
         }
@@ -173,7 +173,7 @@ class BookingController
     // -----------------------------------------
     private function wajibLogin(): void
     {
-        if (!isset($_SESSION['user_id'])) {
+        if (!isset($_SESSION['user'])) {
             header('Location: /login');
             exit;
         }

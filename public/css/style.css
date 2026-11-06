@@ -1,6 +1,4 @@
 @import "tailwindcss";
-body {
-    font-family: Arial, sans-serif;
 
 :root {
   --lime: #BFFF1A;
@@ -8,4 +6,12 @@ body {
   --gray: #3D3F44;
   --black: #121418;
   --white: #EDEFF2;
+}
+
+html, body {
+  overscroll-behavior-y: none;
+}
+
+body {
+    font-family: Arial, sans-serif;
 }

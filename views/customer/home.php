@@ -8,7 +8,7 @@ $totalLapangan = array_sum($sportCounts);
 require __DIR__ . '/../layout/header.php';
 ?>
 
-<main class="w-full">
+<main class="flex-1 w-full">
 
   <!-- ==========================================
        SEKSI HERO
@@ -26,11 +26,6 @@ require __DIR__ . '/../layout/header.php';
 
     <!-- Konten hero -->
     <div class="relative z-10 mx-auto flex max-w-5xl flex-col items-center space-y-7 text-center">
-
-      <!-- Tagline kecil di atas judul -->
-      <span class="inline-block rounded-full border border-brand/30 bg-brand/10 px-4 py-1.5 text-xs font-extrabold uppercase tracking-widest text-brand">
-        Platform Booking Lapangan Olahraga
-      </span>
 
       <!-- Judul utama -->
       <h1 class="max-w-4xl text-4xl font-extrabold leading-[1.1] tracking-tight text-white drop-shadow-md sm:text-5xl md:text-6xl">
@@ -103,7 +98,7 @@ require __DIR__ . '/../layout/header.php';
           </button>
         </form>
 
-        <!-- Shortcut jenis olahraga & info total harga otomatis -->
+        <!-- Shortcut jenis olahraga -->
         <div class="mt-4 flex flex-wrap items-center justify-between gap-2 border-t border-black/5 pt-3">
           <div class="flex flex-wrap items-center gap-2 text-xs text-steel">
             <span class="font-bold text-ink">Pilihan Cepat:</span>
@@ -113,10 +108,6 @@ require __DIR__ . '/../layout/header.php';
                 <?= $namaOlahraga ?>
               </a>
             <?php endforeach; ?>
-          </div>
-          <div class="flex items-center gap-1 text-xs font-bold text-ink">
-            <span class="material-symbols-outlined rounded-full bg-ink p-0.5 text-[17px] text-brand">verified</span>
-            Total harga dihitung otomatis
           </div>
         </div>
       </div>

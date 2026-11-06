@@ -133,3 +133,17 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+-- --------------------------------------------------------
+-- SEED: Akun Admin Default
+-- Password: Admin@1234  (di-hash dengan password_hash PHP)
+-- Jalankan query ini setelah import tabel di atas
+-- GANTI password hash di bawah jika ingin password berbeda
+-- --------------------------------------------------------
+
+-- Cara generate hash baru: php -r "echo password_hash('Admin@1234', PASSWORD_DEFAULT);"
+
+INSERT INTO `users` (`name`, `email`, `password`, `role`) VALUES
+('Administrator', 'admin@sportspace.com', '$2y$10$T4zM9CV3drILPhQY8Kxk0eOYFV61hGlqsEgxoM5BcOtCch3TCHMeu', 'admin')
+ON DUPLICATE KEY UPDATE `name` = VALUES(`name`);
+

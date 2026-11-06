@@ -13,7 +13,7 @@ $warnaBadge = [
 require __DIR__ . '/../layout/header.php';
 ?>
 
-<main class="min-h-screen bg-snow pt-28 pb-16">
+<main class="flex-1 bg-snow pt-28 pb-16">
   <div class="mx-auto max-w-5xl px-4 sm:px-6">
 
     <!-- Judul halaman -->

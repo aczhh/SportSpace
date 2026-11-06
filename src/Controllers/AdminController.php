@@ -28,18 +28,22 @@ class AdminController
         $this->wajibAdmin();
 
         if ($this->modelBooking) {
-            $jumlahLapangan   = $this->modelLapangan->hitungTotal();
-            $jumlahBooking    = $this->modelBooking->hitungTotal();
-            $bookingPerStatus = $this->modelBooking->hitungPerStatus();
+            $jumlahLapangan    = $this->modelLapangan->hitungTotal();
+            $jumlahBooking     = $this->modelBooking->hitungTotal();
+            $bookingPerStatus  = $this->modelBooking->hitungPerStatus();
+            $lapanganTerbaru   = $this->modelLapangan->ambilSemua();
+            $bookingTerbaru    = $this->modelBooking->ambilTerbaru(8);
         } else {
-            $semuaBooking     = $_SESSION['dummy_bookings'] ?? [];
-            $jumlahLapangan   = count($_SESSION['dummy_courts'] ?? []);
-            $jumlahBooking    = count($semuaBooking);
-            $bookingPerStatus = ['pending' => 0, 'confirmed' => 0, 'cancelled' => 0];
+            $semuaBooking      = $_SESSION['dummy_bookings'] ?? [];
+            $jumlahLapangan    = count($_SESSION['dummy_courts'] ?? []);
+            $jumlahBooking     = count($semuaBooking);
+            $bookingPerStatus  = ['pending' => 0, 'confirmed' => 0, 'cancelled' => 0];
             foreach ($semuaBooking as $b) {
                 $st = $b['status'] ?? 'pending';
                 $bookingPerStatus[$st] = ($bookingPerStatus[$st] ?? 0) + 1;
             }
+            $lapanganTerbaru   = $_SESSION['dummy_courts']   ?? [];
+            $bookingTerbaru    = array_slice($semuaBooking, 0, 8);
         }
 
         require __DIR__ . '/../../views/admin/dashboard.php';
@@ -130,16 +134,24 @@ class AdminController
         $description    = trim($_POST['description']   ?? '');
         $facilities     = trim($_POST['facilities']    ?? '');
         $price_per_hour = trim($_POST['price_per_hour']?? '');
-        $image          = trim($_POST['image']         ?? 'court.jpg');
 
         // Validasi input wajib
         $error = $this->validasiInputLapangan($name, $sport_type, $price_per_hour);
         if ($error) {
             $_SESSION['error_admin']   = $error;
-            $_SESSION['form_lapangan'] = $_POST; // simpan isian form agar tidak hilang
+            $_SESSION['form_lapangan'] = $_POST;
             header('Location: /admin/courts');
             exit;
         }
+
+        // Handle upload gambar
+        $namaFile = $this->prosesUploadGambar();
+        if (is_string($namaFile) && str_starts_with($namaFile, 'ERROR:')) {
+            $_SESSION['error_admin'] = substr($namaFile, 6);
+            header('Location: /admin/courts');
+            exit;
+        }
+        $image = $namaFile ?: 'court.jpg';
 
         if ($this->modelLapangan) {
             $berhasil = $this->modelLapangan->buat([
@@ -148,7 +160,7 @@ class AdminController
                 'description'   => $description,
                 'facilities'    => $facilities,
                 'price_per_hour'=> (float) $price_per_hour,
-                'image'         => $image ?: 'court.jpg',
+                'image'         => $image,
             ]);
 
             if ($berhasil) {
@@ -166,7 +178,7 @@ class AdminController
                 'description'   => $description,
                 'facilities'    => $facilities,
                 'price_per_hour'=> (float) $price_per_hour,
-                'image'         => $image ?: 'court.jpg',
+                'image'         => $image,
                 'created_at'    => date('Y-m-d H:i:s'),
             ];
             $_SESSION['dummy_courts'] = $semuaCourt;
@@ -191,7 +203,7 @@ class AdminController
         $description    = trim($_POST['description']      ?? '');
         $facilities     = trim($_POST['facilities']       ?? '');
         $price_per_hour = trim($_POST['price_per_hour']   ?? '');
-        $image          = trim($_POST['image']            ?? 'court.jpg');
+        $imageExisting  = trim($_POST['image_existing']   ?? 'court.jpg');
 
         // Validasi: id harus ada
         if ($id <= 0) {
@@ -208,6 +220,16 @@ class AdminController
             exit;
         }
 
+        // Handle upload gambar (jika ada file baru diunggah)
+        $namaFile = $this->prosesUploadGambar();
+        if (is_string($namaFile) && str_starts_with($namaFile, 'ERROR:')) {
+            $_SESSION['error_admin'] = substr($namaFile, 6);
+            header('Location: /admin/courts');
+            exit;
+        }
+        // Jika tidak ada file baru, pakai gambar lama
+        $image = $namaFile ?: ($imageExisting ?: 'court.jpg');
+
         if ($this->modelLapangan) {
             $berhasil = $this->modelLapangan->update($id, [
                 'name'          => $name,
@@ -215,7 +237,7 @@ class AdminController
                 'description'   => $description,
                 'facilities'    => $facilities,
                 'price_per_hour'=> (float) $price_per_hour,
-                'image'         => $image ?: 'court.jpg',
+                'image'         => $image,
             ]);
 
             if ($berhasil) {
@@ -232,7 +254,7 @@ class AdminController
                     $court['description']   = $description;
                     $court['facilities']    = $facilities;
                     $court['price_per_hour']= (float) $price_per_hour;
-                    $court['image']         = $image ?: 'court.jpg';
+                    $court['image']         = $image;
                     break;
                 }
             }
@@ -287,12 +309,52 @@ class AdminController
     }
 
     // -----------------------------------------
+    // HELPER: proses upload gambar lapangan
+    // Mengembalikan nama file jika berhasil,
+    // null jika tidak ada file, atau 'ERROR:...' jika gagal
+    // -----------------------------------------
+    private function prosesUploadGambar(): ?string
+    {
+        // Tidak ada file yang diunggah
+        if (empty($_FILES['image']['name'])) {
+            return null;
+        }
+
+        $file     = $_FILES['image'];
+        $ekstensi = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+        $allowed  = ['jpg', 'jpeg', 'png', 'webp'];
+
+        if (!in_array($ekstensi, $allowed)) {
+            return 'ERROR:Format gambar tidak valid. Gunakan jpg, jpeg, png, atau webp.';
+        }
+
+        if ($file['size'] > 2 * 1024 * 1024) {
+            return 'ERROR:Ukuran gambar maksimal 2MB.';
+        }
+
+        // Buat nama file unik
+        $namaFile  = time() . '_' . bin2hex(random_bytes(4)) . '.' . $ekstensi;
+        $targetDir = __DIR__ . '/../../public/images/';
+        $targetPath= $targetDir . $namaFile;
+
+        if (!is_dir($targetDir)) {
+            mkdir($targetDir, 0755, true);
+        }
+
+        if (!move_uploaded_file($file['tmp_name'], $targetPath)) {
+            return 'ERROR:Gagal mengupload gambar. Coba lagi.';
+        }
+
+        return $namaFile;
+    }
+
+    // -----------------------------------------
     // HELPER: hanya admin yang bisa akses
     // -----------------------------------------
     private function wajibAdmin(): void
     {
-        if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
-            header('Location: /login');
+        if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
+            header('Location: /admin/login');
             exit;
         }
     }

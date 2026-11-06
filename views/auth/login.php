@@ -20,9 +20,11 @@ unset($_SESSION['error'], $_SESSION['success']);
 
         <!-- Logo dan Judul -->
         <div class="text-center mb-8">
-            <h1 class="text-4xl font-extrabold tracking-tight">
-                Sport<span class="text-[#B8F500]">Space</span>
-            </h1>
+            <a href="/" class="inline-block group">
+                <h1 class="text-4xl font-extrabold tracking-tight transition group-hover:opacity-85">
+                    Sport<span class="text-[#B8F500]">Space</span>
+                </h1>
+            </a>
 
             <p class="text-gray-400 mt-3">
                 Masuk dan mulai pengalaman olahraga bersama kami.

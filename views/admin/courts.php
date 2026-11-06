@@ -23,7 +23,7 @@ unset($_SESSION['form_edit_lapangan']);
 require __DIR__ . '/../layout/header.php';
 ?>
 
-<main class="min-h-screen bg-snow pt-28 pb-16">
+<main class="flex-1 bg-snow pt-28 pb-16">
   <div class="mx-auto max-w-6xl px-4 sm:px-6">
 
     <!-- ========== Header Halaman ========== -->
@@ -192,16 +192,16 @@ require __DIR__ . '/../layout/header.php';
      Muncul saat tombol Edit diklik
      ======================================================== -->
 <div id="modal-edit"
-     class="fixed inset-0 z-50 hidden items-center justify-center bg-black/60 px-4 backdrop-blur-sm"
+     class="fixed inset-0 z-50 hidden items-start justify-center overflow-y-auto bg-black/60 px-4 py-6 backdrop-blur-sm sm:items-center sm:py-10"
      onclick="tutupModalEdit(event)">
 
-  <div class="relative w-full max-w-2xl rounded-2xl border border-black/10 bg-white shadow-2xl"
+  <div class="relative w-full max-w-2xl rounded-2xl border border-black/10 bg-white shadow-2xl mx-auto"
        onclick="event.stopPropagation()">
 
-    <!-- Header modal -->
-    <div class="flex items-center justify-between border-b border-black/10 px-6 py-4">
-      <h2 class="text-lg font-extrabold text-ink">
-        <span class="material-symbols-outlined align-middle text-[22px] text-brand">edit</span>
+    <!-- Header modal – sticky supaya tetap terlihat saat scroll -->
+    <div class="flex items-center justify-between border-b border-black/10 px-5 py-4 sm:px-6">
+      <h2 class="flex items-center gap-2 text-base font-extrabold text-ink sm:text-lg">
+        <span class="material-symbols-outlined text-[20px] text-brand sm:text-[22px]">edit</span>
         Edit Lapangan
       </h2>
       <button type="button" onclick="tutupModalEdit()"
@@ -211,33 +211,37 @@ require __DIR__ . '/../layout/header.php';
     </div>
 
     <!-- Form edit di dalam modal -->
-    <form action="/admin/courts/update" method="POST" class="space-y-4 p-6">
+    <form action="/admin/courts/update" method="POST" enctype="multipart/form-data" class="space-y-4 p-5 sm:p-6">
       <input type="hidden" name="id" id="edit-id">
+      <input type="hidden" name="image_existing" id="edit-image-existing">
 
-      <!-- Nama lapangan -->
-      <div class="flex flex-col gap-1.5">
-        <label for="edit-name" class="text-sm font-bold text-ink">Nama Lapangan</label>
-        <input id="edit-name" name="name" type="text" required
-               placeholder="Contoh: Arena Garuda A"
-               class="w-full rounded-xl border border-black/10 bg-snow px-4 py-2.5 text-sm text-ink outline-none focus:ring-2 focus:ring-brand">
-      </div>
+      <!-- Baris: Nama + Jenis Olahraga -->
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div class="flex flex-col gap-1.5">
+          <label for="edit-name" class="text-sm font-bold text-ink">Nama Lapangan</label>
+          <input id="edit-name" name="name" type="text" required
+                 placeholder="Contoh: Arena Garuda A"
+                 class="w-full rounded-xl border border-black/10 bg-snow px-4 py-2.5 text-sm text-ink outline-none focus:ring-2 focus:ring-brand">
+        </div>
 
-      <!-- Jenis olahraga -->
-      <div class="flex flex-col gap-1.5">
-        <label for="edit-sport" class="text-sm font-bold text-ink">Jenis Olahraga</label>
-        <select id="edit-sport" name="sport_type" required
-                class="w-full cursor-pointer rounded-xl border border-black/10 bg-snow px-4 py-2.5 text-sm text-ink outline-none focus:ring-2 focus:ring-brand">
-          <option value="">-- Pilih Olahraga --</option>
-          <?php foreach ($pilihanSport as $s): ?>
-            <option value="<?= $s ?>"><?= $s ?></option>
-          <?php endforeach; ?>
-        </select>
+        <div class="flex flex-col gap-1.5">
+          <label for="edit-sport" class="text-sm font-bold text-ink">Jenis Olahraga</label>
+          <select id="edit-sport" name="sport_type" required
+                  class="w-full cursor-pointer rounded-xl border border-black/10 bg-snow px-4 py-2.5 text-sm text-ink outline-none focus:ring-2 focus:ring-brand">
+            <option value="">-- Pilih Olahraga --</option>
+            <?php foreach ($pilihanSport as $s): ?>
+              <option value="<?= $s ?>"><?= $s ?></option>
+            <?php endforeach; ?>
+          </select>
+        </div>
       </div>
 
       <!-- Deskripsi -->
       <div class="flex flex-col gap-1.5">
-        <label for="edit-desc" class="text-sm font-bold text-ink">Deskripsi <span class="font-normal text-steel">(opsional)</span></label>
-        <textarea id="edit-desc" name="description" rows="3"
+        <label for="edit-desc" class="text-sm font-bold text-ink">
+          Deskripsi <span class="font-normal text-steel">(opsional)</span>
+        </label>
+        <textarea id="edit-desc" name="description" rows="2"
                   placeholder="Deskripsikan lapangan ini..."
                   class="w-full resize-none rounded-xl border border-black/10 bg-snow px-4 py-2.5 text-sm text-ink outline-none focus:ring-2 focus:ring-brand"></textarea>
       </div>
@@ -252,34 +256,48 @@ require __DIR__ . '/../layout/header.php';
                class="w-full rounded-xl border border-black/10 bg-snow px-4 py-2.5 text-sm text-ink outline-none focus:ring-2 focus:ring-brand">
       </div>
 
-      <!-- Harga per jam -->
-      <div class="flex flex-col gap-1.5">
-        <label for="edit-price" class="text-sm font-bold text-ink">Harga per Jam (Rp)</label>
-        <input id="edit-price" name="price_per_hour" type="number" min="1" required
-               placeholder="Contoh: 100000"
-               class="w-full rounded-xl border border-black/10 bg-snow px-4 py-2.5 text-sm text-ink outline-none focus:ring-2 focus:ring-brand">
-      </div>
+      <!-- Baris: Harga + Upload Foto -->
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div class="flex flex-col gap-1.5">
+          <label for="edit-price" class="text-sm font-bold text-ink">Harga per Jam (Rp)</label>
+          <input id="edit-price" name="price_per_hour" type="number" min="1" required
+                 placeholder="Contoh: 100000"
+                 class="w-full rounded-xl border border-black/10 bg-snow px-4 py-2.5 text-sm text-ink outline-none focus:ring-2 focus:ring-brand">
+        </div>
 
-      <!-- Nama file gambar -->
-      <div class="flex flex-col gap-1.5">
-        <label for="edit-image" class="text-sm font-bold text-ink">
-          Nama File Gambar <span class="font-normal text-steel">(di folder public/images/)</span>
-        </label>
-        <input id="edit-image" name="image" type="text"
-               placeholder="Contoh: court.jpg"
-               class="w-full rounded-xl border border-black/10 bg-snow px-4 py-2.5 text-sm text-ink outline-none focus:ring-2 focus:ring-brand">
+        <!-- Upload foto -->
+        <div class="flex flex-col gap-1.5">
+          <label class="text-sm font-bold text-ink">
+            Foto <span class="font-normal text-steel">(kosongkan jika tidak diganti)</span>
+          </label>
+          <!-- Preview foto saat ini (thumbnail kecil + nama) -->
+          <div class="flex items-center gap-2">
+            <img id="edit-current-preview" src="" alt="Foto saat ini"
+                 class="h-10 w-14 shrink-0 rounded-lg object-cover border border-black/10 bg-snow">
+            <span class="truncate text-xs text-steel" id="edit-current-filename"></span>
+          </div>
+          <label for="edit-image"
+                 class="flex cursor-pointer items-center gap-2 rounded-xl border-2 border-dashed border-black/15 bg-snow px-3 py-2.5 text-sm text-steel transition hover:border-brand hover:bg-brand/5">
+            <span class="material-symbols-outlined text-[20px] text-steel/60">upload_file</span>
+            <span id="edit-file-name" class="truncate">Pilih foto baru...</span>
+          </label>
+          <input id="edit-image" name="image" type="file" accept="image/jpeg,image/png,image/webp"
+                 class="sr-only" onchange="previewFileNameEdit()">
+          <img id="edit-new-preview" src="" alt="Preview baru"
+               class="hidden mt-1 h-20 w-full rounded-xl object-cover border border-black/10">
+        </div>
       </div>
 
       <!-- Tombol aksi -->
-      <div class="flex gap-3 border-t border-black/5 pt-4">
+      <div class="flex flex-col-reverse gap-2 border-t border-black/5 pt-4 sm:flex-row">
+        <button type="button" onclick="tutupModalEdit()"
+                class="w-full rounded-xl border border-black/10 bg-snow py-2.5 text-sm font-bold text-steel transition hover:bg-black/5 sm:w-auto sm:px-6">
+          Batal
+        </button>
         <button type="submit"
                 class="flex flex-1 items-center justify-center gap-2 rounded-xl bg-brand py-2.5 text-sm font-bold text-ink transition hover:bg-brand-hover">
           <span class="material-symbols-outlined text-[18px]">save</span>
           Simpan Perubahan
-        </button>
-        <button type="button" onclick="tutupModalEdit()"
-                class="rounded-xl border border-black/10 bg-snow px-5 py-2.5 text-sm font-bold text-steel transition hover:bg-black/5">
-          Batal
         </button>
       </div>
     </form>
@@ -300,12 +318,27 @@ require __DIR__ . '/../layout/header.php';
 
   // ── Buka modal edit & isi data lapangan yang dipilih ──
   function bukaDalogEdit(lapangan) {
-    document.getElementById('edit-id').value          = lapangan.id;
-    document.getElementById('edit-name').value        = lapangan.name;
-    document.getElementById('edit-desc').value        = lapangan.description  ?? '';
-    document.getElementById('edit-facilities').value  = lapangan.facilities   ?? '';
-    document.getElementById('edit-price').value       = lapangan.price_per_hour;
-    document.getElementById('edit-image').value       = lapangan.image        ?? 'court.jpg';
+    document.getElementById('edit-id').value             = lapangan.id;
+    document.getElementById('edit-image-existing').value = lapangan.image ?? 'court.jpg';
+    document.getElementById('edit-name').value           = lapangan.name;
+    document.getElementById('edit-desc').value           = lapangan.description  ?? '';
+    document.getElementById('edit-facilities').value     = lapangan.facilities   ?? '';
+    document.getElementById('edit-price').value          = lapangan.price_per_hour;
+
+    // Tampilkan foto saat ini
+    const currentPreview  = document.getElementById('edit-current-preview');
+    const currentFilename = document.getElementById('edit-current-filename');
+    const imgSrc          = '/images/' + (lapangan.image || 'court.jpg');
+    if (currentPreview)  currentPreview.src       = imgSrc;
+    if (currentFilename) currentFilename.textContent = lapangan.image || 'court.jpg';
+
+    // Reset preview baru
+    const newPreview = document.getElementById('edit-new-preview');
+    const fileInput  = document.getElementById('edit-image');
+    if (newPreview) { newPreview.src = ''; newPreview.classList.add('hidden'); }
+    if (fileInput)    fileInput.value = '';
+    const fnLabel = document.getElementById('edit-file-name');
+    if (fnLabel) fnLabel.textContent = 'Pilih foto baru...';
 
     // Set selected option jenis olahraga
     const selectSport = document.getElementById('edit-sport');
@@ -318,6 +351,20 @@ require __DIR__ . '/../layout/header.php';
 
     document.getElementById('modal-edit').classList.remove('hidden');
     document.getElementById('modal-edit').classList.add('flex');
+  }
+
+  // Preview file baru di modal edit
+  function previewFileNameEdit() {
+    const input    = document.getElementById('edit-image');
+    const label    = document.getElementById('edit-file-name');
+    const preview  = document.getElementById('edit-new-preview');
+    if (!input || !input.files || !input.files[0]) return;
+    const file = input.files[0];
+    if (label)   label.textContent = file.name;
+    if (preview) {
+      preview.src = URL.createObjectURL(file);
+      preview.classList.remove('hidden');
+    }
   }
 
   // ── Tutup modal edit ──

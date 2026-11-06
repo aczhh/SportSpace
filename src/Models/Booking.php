@@ -155,5 +155,26 @@ class Booking
 
         return $hasil;
     }
+
+    // -----------------------------------------
+    // AMBIL BOOKING TERBARU (untuk dashboard admin)
+    // -----------------------------------------
+    public function ambilTerbaru(int $batas = 5): array
+    {
+        $sql = "SELECT b.*,
+                       u.name       AS nama_customer,
+                       c.name       AS nama_lapangan,
+                       c.sport_type AS jenis_olahraga
+                FROM bookings b
+                JOIN users  u ON b.user_id  = u.id
+                JOIN courts c ON b.court_id = c.id
+                ORDER BY b.created_at DESC
+                LIMIT :batas";
+
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->bindValue(':batas', $batas, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll();
+    }
 }
 
