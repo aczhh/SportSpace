@@ -1,4 +1,6 @@
 @import "tailwindcss";
+body {
+    font-family: Arial, sans-serif;
 
 :root {
   --lime: #BFFF1A;

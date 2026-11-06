@@ -6,27 +6,21 @@
 // sesuai pengaturan MySQL di komputer kalian
 // =============================================
 
-$host      = 'localhost';
-$nama_db   = 'sportspace_db';
-$user      = 'root';
-$password  = '';
+$host     = 'localhost';
+$nama_db  = 'sportspace_db';
+$user     = 'root';
+$password = ''; // Sesuaikan dengan password Laragon/MySQL kamu
+$charset  = 'utf8mb4';
 
-// Buat koneksi PDO ke MySQL
+$dsn = "mysql:host={$host};dbname={$nama_db};charset={$charset}";
+$options = [
+    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    PDO::ATTR_EMULATE_PREPARES   => false,
+];
+
 try {
-    $pdo = new PDO(
-        "mysql:host={$host};dbname={$nama_db};charset=utf8mb4",
-        $user,
-        $password
-    );
-
-    // Tampilkan error sebagai exception agar mudah di-debug
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-    // Hasil fetch berupa array asosiatif (key = nama kolom)
-    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-
+    $pdo = new PDO($dsn, $user, $password, $options);
 } catch (PDOException $e) {
-    // Hentikan aplikasi dan tampilkan pesan error
     die('Koneksi database gagal: ' . $e->getMessage());
 }
-

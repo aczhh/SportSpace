@@ -1,39 +1,45 @@
 <?php
 
-// =============================================
-// MODEL USER
-// Tanggung jawab: Anggota 1
-// Mengelola query ke tabel users
-// =============================================
-
+namespace App\Models;
+use PDO;
 class User
 {
-    private PDO $pdo;
-
+    private $pdo;
+    // Menerima koneksi database dari Controller
     public function __construct(PDO $pdo)
-    {
-        $this->pdo = $pdo;
-    }
+    { $this->pdo = $pdo; }
 
-    // TODO: Anggota 1 – cari user berdasarkan email (untuk login)
-    public function cariByEmail(string $email): ?array
-    {
-        $stmt = $this->pdo->prepare("SELECT * FROM users WHERE email = :email LIMIT 1");
-        $stmt->execute([':email' => $email]);
-        $user = $stmt->fetch();
-        return $user ?: null;
-    }
-
-    // TODO: Anggota 1 – simpan user baru ke database (untuk register)
-    public function buat(array $data): bool
-    {
-        $sql  = "INSERT INTO users (name, email, password, role) VALUES (:name, :email, :password, 'customer')";
+    // Membuat akun customer baru
+    public function create($name, $email, $password)
+    {   $sql = "INSERT INTO users (name, email, password, role)
+                VALUES (:name, :email, :password, 'customer')";
         $stmt = $this->pdo->prepare($sql);
         return $stmt->execute([
-            ':name'     => $data['name'],
-            ':email'    => $data['email'],
-            ':password' => $data['password'], // sudah di-hash sebelum dikirim ke sini
+            ':name'     => $name,
+            ':email'    => $email,
+            ':password' => $password
         ]);
     }
-}
 
+    // Mencari pengguna berdasarkan email
+    public function findByEmail($email)
+    {   $sql = "SELECT * FROM users WHERE email = :email LIMIT 1";
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([
+            ':email' => $email ]);
+           return $stmt->fetch();
+    }
+
+    // Mencari pengguna berdasarkan ID
+    public function findById($id)
+    {   $sql = "SELECT id, name, email, role, created_at
+                FROM users
+                WHERE id = :id
+                LIMIT 1";
+                
+        $stmt = $this->pdo->prepare($sql);
+        $stmt->execute([
+            ':id' => $id ]);
+        return $stmt->fetch();
+    }
+}
