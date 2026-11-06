@@ -1,10 +1,3 @@
-// Menu mobile
-const menuBtn = document.getElementById('menu-btn');
-const mobileMenu = document.getElementById('mobile-menu');
-
-if (menuBtn && mobileMenu) {
-  menuBtn.addEventListener('click', () => {
-    const isHidden = mobileMenu.classList.toggle('hidden');
-    menuBtn.setAttribute('aria-expanded', String(!isHidden));
-  });
-}
+// script.js — SportSpace
+// Catatan: mobile menu & user dropdown dihandle langsung di header.php
+// File ini bisa dipakai untuk script tambahan di masa depan.

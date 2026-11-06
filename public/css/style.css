@@ -1,1 +1,17 @@
 @import "tailwindcss";
+
+:root {
+  --lime: #BFFF1A;
+  --lime-hover: #7CFF00;
+  --gray: #3D3F44;
+  --black: #121418;
+  --white: #EDEFF2;
+}
+
+html, body {
+  overscroll-behavior-y: none;
+}
+
+body {
+    font-family: Arial, sans-serif;
+}
